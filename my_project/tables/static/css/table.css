@@ -1,0 +1,61 @@
+.wrapper{ 
+  min-height: 100vh;
+  width: 100%;
+
+  background-color: aliceblue;
+  background-image: url(1679632113_bogatyr-club-p-fon-dlya-prezentatsii-krasno-sinii-instagr-2.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(12uhp.png);
+  background-repeat: no-repeat;
+  background-size: 100px;
+  background-position: 100%  100%; 
+}  
+
+h1{
+    text-align: center;
+}
+
+form label {
+    display: flex;
+    justify-content: left;
+    font-size: 24px;
+    color: #333;
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+  
+  form input, form textarea {
+    margin-top: 3px;
+    margin-left: 10px;
+    font-size: 16px;
+    color: rgb(58, 58, 58);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 6px;
+    width: 30%;
+  }
+
+  .btn{ 
+    margin-top: 25px;
+    margin-left: 10px;
+    display: block; 
+    background: #ff0000;
+    color: rgb(255, 255, 255);
+    padding: 1rem 2rem; 
+    border: 1px solid black;
+    border-radius: 10px;
+    text-decoration: none; 
+}
+
+.back{
+    margin-top: 100px;
+    margin-left: 10px;
+    display: inline-block; 
+    background: rgb(110, 110, 110);
+    color: rgb(0, 0, 0);
+    padding: 1rem 2rem; 
+    border: 1px solid black;
+    border-radius: 10px;
+    text-decoration: none;
+}

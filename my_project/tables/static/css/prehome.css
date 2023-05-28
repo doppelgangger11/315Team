@@ -1,0 +1,26 @@
+.wrapper{ 
+    min-height: 100vh;
+    width: 100%;
+  
+    background-color: aliceblue;
+    background-image: url(1679632113_bogatyr-club-p-fon-dlya-prezentatsii-krasno-sinii-instagr-2.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(12uhp.png);
+    background-repeat: no-repeat;
+    background-size: 100px;
+    background-position: 100%  100%; 
+}  
+
+.home{
+    text-align: center;
+}
+.btn {
+    display: inline-block; /* Строчно-блочный элемент */
+    background: #ff0000; /* Серый цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 1rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 10px; /* Скругляем уголки */
+    font-size: 20px;
+   }
