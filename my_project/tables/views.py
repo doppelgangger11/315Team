@@ -3,6 +3,7 @@ from io import BytesIO
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -13,13 +14,14 @@ from docx import Document
 from .forms import NameForm, NameForm23, NameForm26
 from .models import Table, Table23, Table26
 
-
+@login_required
 def home(request):
     return render(request, "home/home.html", {'home': home})
 
 def prehome(request):
     return render(request, "home/prehome.html", {"prehome": prehome})
 
+@login_required
 # Таблица №20ьтттттттттттт
 def new_form(request):
     
@@ -37,11 +39,13 @@ def new_form(request):
 
     return render(request, "form/form.html", {'form': form})
 
+@login_required
 def table_page(request, pk):
     table = Table.objects.get(id=pk)
     return render(request, "form/table_page.html", {'table': table})
 
 
+@login_required
 # Таблица №23
 def new_form23(request):
     
@@ -59,11 +63,13 @@ def new_form23(request):
 
     return render(request, "table23/form.html", {'form': form})
 
+@login_required
 def table_page23(request, pk):
     table = Table23.objects.get(id=pk)
     return render(request, "table23/table_page23.html", {'table': table})
 
 
+@login_required
 # Таблица №26
 def new_form26(request):
     
@@ -81,6 +87,7 @@ def new_form26(request):
 
     return render(request, "table26/form.html", {'form': form})
 
+@login_required
 def table_page26(request, pk):
     table = Table26.objects.get(id=pk)
     return render(request, "table26/table_page26.html", {'table': table})
