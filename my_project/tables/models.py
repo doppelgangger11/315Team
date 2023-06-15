@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 
 # Create your models here.
@@ -7,6 +8,13 @@ class Table(models.Model):
     patent = models.CharField( max_length=100)
     year = models.CharField( max_length=100)
     title = models.CharField( max_length=100)
+
+    date = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.date:
+            self.date = date.today()
+        super(Table, self).save(*args, **kwargs)
 
     def publish(self):
         self.save()
@@ -23,6 +31,13 @@ class Table23(models.Model):
      end_date = models.DateField()
      availability = models.CharField(max_length=100)
 
+     date = models.DateField(auto_now_add=True)
+
+     def save(self, *args, **kwargs):
+        if not self.date:
+            self.date = date.today()
+        super(Table23, self).save(*args, **kwargs)
+
      def publish(self):
         self.save()
 
@@ -35,6 +50,13 @@ class Table26(models.Model):
      directon_of_speciality = models.CharField(max_length=40)
      date_of_conclusion_of_the_contract = models.DateField()
      terms_of_the_contract = models.CharField(max_length=40)
+
+     date = models.DateField(auto_now_add=True)
+
+     def save(self, *args, **kwargs):
+        if not self.date:
+            self.date = date.today()
+        super(Table26, self).save(*args, **kwargs)
 
      def publish(self):
         self.save()

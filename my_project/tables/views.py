@@ -13,6 +13,8 @@ from docx import Document
 
 from .forms import NameForm, NameForm23, NameForm26
 from .models import Table, Table23, Table26
+from datetime import datetime
+from itertools import groupby
 
 @login_required
 def home(request):
@@ -96,11 +98,8 @@ def table_page26(request, pk):
 
 def export_data_to_word(request):
     
-
     # Create a new Word document
     document = Document()
-
-
 
     # Таблица №20
 
@@ -108,61 +107,88 @@ def export_data_to_word(request):
 
     document.add_paragraph('Перечень патентов, полученных в 20____-20___ годы', style='Heading 1')
 
-    queryset = Table.objects.all()
+    queryset = Table.objects.all().order_by('date')
+    grouped_queryset = groupby(queryset, lambda obj: obj.year_month)
 
-    # Add a table to the document with headers
-    table = document.add_table(rows=2, cols=4)
-    hdr_cells = table.rows[0].cells
-    table.style = 'Table Grid'
-    hdr_cells[0].text = 'Ф.И.О. автора'
-    hdr_cells[1].text = '№ патента'
-    hdr_cells[2].text = 'Год выдачи'
-    hdr_cells[3].text = 'Название'
-    
-    # Add data rows to the table
-    for obj in queryset:
-        row_cells = table.add_row().cells
-        row_cells[0].text = str(obj.author_name)
-        row_cells[1].text = str(obj.patent)
-        row_cells[2].text = str(obj.year)
-        row_cells[3].text = str(obj.title)
-    document.add_paragraph('Договора о международном сотрудничестве', style='Heading 1')
+    for year_month, group in grouped_queryset:
+        # Add a heading for the month
+        month = datetime.strptime(year_month, '%Y-%m').strftime('%B %Y')
+        document.add_paragraph(f'Перечень патентов, полученных в {month}', style='Heading 1')
+
+        # Add a table to the document with headers
+        table = document.add_table(rows=2, cols=4)
+        hdr_cells = table.rows[0].cells
+        table.style = 'Table Grid'
+        hdr_cells[0].text = 'Ф.И.О. автора'
+        hdr_cells[1].text = '№ патента'
+        hdr_cells[2].text = 'Год выдачи'
+        hdr_cells[3].text = 'Название'
+        
+        # Add data rows to the table
+        for obj in queryset:
+            row_cells = table.add_row().cells
+            row_cells[0].text = str(obj.author_name)
+            row_cells[1].text = str(obj.patent)
+            row_cells[2].text = str(obj.year)
+            row_cells[3].text = str(obj.title)
+
 
     # Таблица №23
 
-    # Get your queryset of data
-    queryset23 = Table23.objects.all()
+    document.add_paragraph('Договора о международном сотрудничестве', style='Heading 1')
 
-    # Add a table to the document with headers
-    table23 = document.add_table(rows=2, cols=6)
-    hdr_cells23 = table23.rows[0].cells
-    table23.style = 'Table Grid'
-    hdr_cells23[0].text = 'Предмет международного договора или проекта'
-    hdr_cells23[1].text = 'Наименование учебного заведения-партнера'
-    hdr_cells23[2].text = 'Дата заключения проектов и/илидоговоров'
-    hdr_cells23[3].text = 'дата начала'
-    hdr_cells23[4].text = 'дата окончания'
-    hdr_cells23[5].text = 'Фактическое наличие на момент проф. контроля'
-    
-    document.add_paragraph(' Соглашения о сотрудничестве с организациями образования или научными или научно-образовательными или научно-производственными центрами (магистратура, докторантура)', style='Heading 1')
-    # Add data rows to the table
-    for obj in queryset23:
-        row_cells23 = table23.add_row().cells
-        row_cells23[0].text = str(obj.subject)
-        row_cells23[1].text = str(obj.name_of_partner)
-        date_str = obj.start_date.strftime("%Y-%m-%d")
-        date_str1 = obj.date_of_contract.strftime("%Y-%m-%d")
-        date_str2 = obj.end_date.strftime("%Y-%m-%d")
-        row_cells23[2].text = date_str1
-        row_cells23[3].text = date_str
-        row_cells23[4].text = date_str2
-        row_cells23[5].text = str(obj.availability)
+    # Get your queryset of data
+
+    queryset23 = Table23.objects.all().order_by('date')
+    grouped_queryset = groupby(queryset, lambda obj: obj.year_month)
+
+    for year_month, group in grouped_queryset:
+
+        # Add a heading for the month
+        month = datetime.strptime(year_month, '%Y-%m').strftime('%B %Y')
+        year = datetime.strptime(year_month, '%Y-%m').strftime('%Y')
+        document.add_paragraph(f'Перечень договоров о международном сотрудничестве, полученных в {month}, {year}', style='Heading 1')
+
+        # Add a table to the document with headers
+        table23 = document.add_table(rows=2, cols=6)
+        hdr_cells23 = table23.rows[0].cells
+        table23.style = 'Table Grid'
+        hdr_cells23[0].text = 'Предмет международного договора или проекта'
+        hdr_cells23[1].text = 'Наименование учебного заведения-партнера'
+        hdr_cells23[2].text = 'Дата заключения проектов и/илидоговоров'
+        hdr_cells23[3].text = 'дата начала'
+        hdr_cells23[4].text = 'дата окончания'
+        hdr_cells23[5].text = 'Фактическое наличие на момент проф. контроля'
+        
+        # Add data rows to the table
+        for obj in queryset23:
+            row_cells23 = table23.add_row().cells
+            row_cells23[0].text = str(obj.subject)
+            row_cells23[1].text = str(obj.name_of_partner)
+            date_str = obj.start_date.strftime("%Y-%m-%d")
+            date_str1 = obj.date_of_contract.strftime("%Y-%m-%d")
+            date_str2 = obj.end_date.strftime("%Y-%m-%d")
+            row_cells23[2].text = date_str1
+            row_cells23[3].text = date_str
+            row_cells23[4].text = date_str2
+            row_cells23[5].text = str(obj.availability)
 
     
     # Таблица №26
 
+    document.add_paragraph(' Соглашения о сотрудничестве с организациями образования или научными или научно-образовательными или научно-производственными центрами (магистратура, докторантура)', style='Heading 1')
+
     # Get your queryset of data
-    queryset26 = Table26.objects.all()
+    queryset26 = Table26.objects.all().order_by('date')
+    grouped_queryset = groupby(queryset, lambda obj: obj.year_month)
+
+    for year_month, group in grouped_queryset:
+
+        # Add a heading for the month
+        month = datetime.strptime(year_month, '%Y-%m').strftime('%B %Y')
+        year = datetime.strptime(year_month, '%Y-%m').strftime('%Y')
+        document.add_paragraph(f'Соглашения о сотрудничестве с организациями образования или научными или научно-образовательными или научно-производственными центрами (магистратура, докторантура) за {month}, {year}', style='Heading 1')
+
 
     # Add a table to the document with headers
     table26 = document.add_table(rows=2, cols=5)
